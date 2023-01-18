@@ -19,11 +19,12 @@ clock = pygame.time.Clock()
 
 width = SCREEN_W/120
 height = SCREEN_H
-bn = 15
+bn = 20
 dt = 6
 length = 280
+
 def drawBranch(screen, x, y, length, RANGE, colour: list, to: list):
-    if length <= 1:
+    if length <= 2.5:
         return
     r = colour[0]
     g = colour[1]
@@ -42,11 +43,11 @@ def drawBranch(screen, x, y, length, RANGE, colour: list, to: list):
         colour[1] = 0
     if colour[2] < 0:
         colour[2] = 0
-    if colour[0] >= to[0] - 15 and colour[0] <= to[0] + 15:
+    if colour[0] >= (to[0] - bn) and colour[0] <= (to[0] + bn):
         colour[0] = to[0]
-    if colour[1] >= to[1] - 15 and colour[1] <= to[1] + 15:
+    if colour[1] >= (to[1] - bn) and colour[1] <= (to[1] + bn):
         colour[1] = to[1]
-    if colour[2] >= to[2] - 15 and colour[2] <= to[2] + 15:
+    if colour[2] >= (to[2] - bn) and colour[2] <= (to[2] + bn):
         colour[2] = to[2]
 
 
@@ -55,6 +56,7 @@ def drawBranch(screen, x, y, length, RANGE, colour: list, to: list):
     y2 = y - length * math.sin(RANGE)
 
     pygame.draw.line(win, (r, g, b), (x, y), (x2, y2), width=2)
+
     if colour[0] == to[0] and colour[1] < to[1] and colour[2] < to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r, g + bn, b + bn], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r, g + bn, b + bn],to)
@@ -67,12 +69,18 @@ def drawBranch(screen, x, y, length, RANGE, colour: list, to: list):
     elif colour[0] == to[0] and colour[1] == to[1] and colour[2] < to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r, g, b + bn],to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r, g, b + bn],to)
+    elif colour[0] == to[0] and colour[1] == to[1] and colour[2] > to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r, g, b - bn], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r, g, b - bn], to)
     elif colour[0] == to[0] and colour[1] == to[1] and colour[2] == to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r, g, b], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r, g, b], to)
     elif colour[0] == to[0] and colour[1] < to[1] and colour[2] == to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r, g + bn, b], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r, g + bn, b], to)
+    elif colour[0] == to[0] and colour[1] < to[1] and colour[2] < to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r, g + bn, b+bn], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r, g + bn, b+bn], to)
     elif colour[0] == to[0] and colour[1] > to[1] and colour[2] == to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r, g - bn, b], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r, g - bn, b], to)
@@ -106,9 +114,6 @@ def drawBranch(screen, x, y, length, RANGE, colour: list, to: list):
     elif colour[0] > to[0] and colour[1] > to[1] and colour[2] < to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r-bn, g-bn, b+bn], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r-bn, g-bn, b+bn], to)
-    elif colour[0] > to[0] and colour[1] < to[1] and colour[2] < to[2]:
-        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r-bn, g+bn, b+bn], to)
-        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r-bn, g+bn, b+bn], to)
     elif colour[0] > to[0] and colour[1] == to[1] and colour[2] < to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r-bn, g, b+bn], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r-bn, g, b+bn], to)
@@ -118,14 +123,34 @@ def drawBranch(screen, x, y, length, RANGE, colour: list, to: list):
     elif colour[0] > to[0] and colour[1] < to[1] and colour[2] > to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r-bn, g+bn, b-bn], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r-bn, g+bn, b-bn], to)
-    elif colour[0] > to[0] and colour[1] < to[1] and colour[2] > to[2]:
-        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r-bn, g+bn, b-bn], to)
-        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r-bn, g+bn, b-bn], to)
     elif colour[0] > to[0] and colour[1] == to[1] and colour[2] > to[2]:
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r-bn, g, b-bn], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r-bn, g, b-bn], to)
-
-# Game loop
+    elif colour[0] < to[0] and colour[1] > to[1] and colour[2] < to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r+bn, g-bn, b+bn], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r+bn, g-bn, b+bn], to)
+    elif colour[0] < to[0] and colour[1] > to[1] and colour[2] == to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r + bn, g - bn, b], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r + bn, g - bn, b], to)
+    elif colour[0] < to[0] and colour[1] > to[1] and colour[2] > to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r + bn, g - bn, b-bn], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r + bn, g - bn, b-bn], to)
+    elif colour[0] < to[0] and colour[1] == to[1] and colour[2] > to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r + bn, g, b-bn], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r + bn, g, b-bn], to)
+    elif colour[0] < to[0] and colour[1] < to[1] and colour[2] > to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r + bn, g+bn, b - bn], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r + bn, g+bn, b - bn], to)
+    elif colour[0] < to[0] and colour[1] < to[1] and colour[2] == to[2]:
+        drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r + bn, g+bn, b], to)
+        drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r + bn, g+bn, b], to)
+import random
+r = random.randint(0,255)
+g = random.randint(0,255)
+b = random.randint(0,255)
+r1 = random.randint(0,255)
+g1 = random.randint(0,255)
+b1 = random.randint(0,255)
 
 while True:
     for event in pygame.event.get():
@@ -136,13 +161,32 @@ while True:
     y1 = 615.38
 
     win.fill((0, 0, 0))
-    drawBranch(win, 500, 1000, length, RANGE, [255, 0, 0 ], [255,255,0])
+    r += 0.2
+    g += 0.2
+    b += 0.2
+    if r >= 255:
+        r = random.randint(0,255)
+    if g >= 255:
+        g = random.randint(0,255)
+    if b >= 255:
+        b = random.randint(0,255)
+    r1 += 0.2
+    g1 += 0.2
+    b1 += 0.2
+    if r1 >= 255:
+        r1 = random.randint(0, 255)
+    if g1 >= 255:
+        g1 = random.randint(0, 255)
+    if b1 >= 255:
+        b1 = random.randint(0, 255)
+    drawBranch(win, 500, 1000, length, RANGE, [r, g, b], [r1, g1, b1])
 
 
     x,y = pygame.mouse.get_pos()
     if x == 0:
         x = 1
     dt = (x/80)
+
 
 
     pygame.display.flip()

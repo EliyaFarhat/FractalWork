@@ -125,14 +125,8 @@ def drawBranch(screen, x, y, length, RANGE, colour: list, to: list):
         drawBranch(screen, x2, y2, length * 0.67, RANGE + (math.pi / dt), [r-bn, g, b-bn], to)
         drawBranch(screen, x2, y2, length * 0.67, RANGE - (math.pi / dt), [r-bn, g, b-bn], to)
 
+# Game loop
 
-
-
-
-
-     # i want height to change and width to change
-    # Game loop
-const = 0.6
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -149,7 +143,6 @@ while True:
     if x == 0:
         x = 1
     dt = (x/80)
-
 
 
     pygame.display.flip()
